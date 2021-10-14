@@ -1,0 +1,58 @@
+{% load static %}
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="{% static 'bootstrap.js' %}"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="{% static 'bootstrap.css' %}"">
+        <link rel="stylesheet" href="{% static 'style.css' %}">
+        <!-- ajax library axious -->
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <title>{% block title %} Q&A website - Get your questions answered{% endblock %}</title>
+    </head>
+    <body class="bg-light">
+        <div class="container" style="max-width:700">
+            <div class="card shadow-sm" style="margin-top: 20px">
+                <div class="card-header">
+                    <h6 style="margin-bottom: 0; margin-top: 7; display: inline-block">
+                        <a href="/" class="text-dark">ORA
+                            {% if not current_user.is_authenticated %}
+                            <span class="site-title-second-half">Get your questions answered &#129299;</span>
+                            {% endif %}
+                        </a>
+                    </h6>
+                    <span style="float: right">
+                        <span class="csqa-nav">
+                            {% if current_user.is_authenticated %}
+                            <a href="{% url 'my-questions' %}" class="text-dark">My Questions</a>&#x2192;
+                            <a href="{% url 'my-answers' %}" class="text-dark">My Answers</a>&#x2192;
+                            {% endif %}
+                            <a href="/question/new" class="text-dark" style="display: inline-block">
+                                New Question
+                            </a>
+                        </span>
+                    </span>
+                </div>
+                <div class="pb-2 pt-4 pr-4 pl-4">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+        <div class="container text-right" style="max-width:700; padding-right:21; padding-top:2; font-size:14; color: #6c757d; margin-bottom: 7px;">
+                <a href="/" class="text-secondary">Home</a>&#x2192;
+            {% if current_user.is_authenticated %}
+                <a href="/accounts/logout" class="text-secondary">Log out ({{current_user.username}}, {{current_user.points}} points)</a>&#x2192;
+            {% else %}
+                <a href="/accounts/signup" class="text-secondary">Sign up&#9925;</a>&#x2192;
+                <a href="/accounts/login" class="text-secondary">log in&#9889;</a>&#x2192;
+            {% endif %}
+            <a href="/about" class="text-secondary">About</a>&#x2192;
+            <a href="/leaderboard" class="text-secondary">Leaderboard</a>
+        </div>
+    </body>
+    <script>
+        axios.defaults.xsrfCookieName = 'csrftoken';
+        axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+    </script>
+</html>
